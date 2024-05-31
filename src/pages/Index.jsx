@@ -1,19 +1,39 @@
-// Update this page (the content is just a fallback if you fail and example)
-// Use chakra-ui
-import { Container, Text, VStack } from "@chakra-ui/react";
-
-// Example of using react-icons
-// import { FaRocket } from "react-icons/fa";
-// <IconButton aria-label="Add" icon={<FaRocket />} size="lg" />; // IconButton would also have to be imported from chakra
+import { useState } from "react";
+import { Box, Flex } from "@chakra-ui/react";
+import Login from "../components/Login";
+import NavBar from "../components/NavBar";
+import ContactList from "../components/ContactList";
+import ChatWindow from "../components/ChatWindow";
 
 const Index = () => {
+  const [user, setUser] = useState(null);
+  const [selectedContact, setSelectedContact] = useState(null);
+
+  const contacts = [
+    { name: "Alice", avatar: "https://bit.ly/dan-abramov" },
+    { name: "Bob", avatar: "https://bit.ly/ryan-florence" },
+  ];
+
+  if (!user) {
+    return <Login onLogin={setUser} />;
+  }
+
   return (
-    <Container centerContent maxW="container.md" height="100vh" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
-      <VStack spacing={4}>
-        <Text fontSize="2xl">Your Blank Canvas</Text>
-        <Text>Chat with the agent to start making edits.</Text>
-      </VStack>
-    </Container>
+    <Flex direction="column" height="100vh">
+      <NavBar username={user} />
+      <Flex flex="1" overflow="hidden">
+        <Box width="30%" borderRight="1px solid #e2e8f0">
+          <ContactList contacts={contacts} onSelectContact={setSelectedContact} />
+        </Box>
+        <Box flex="1">
+          {selectedContact ? (
+            <ChatWindow selectedContact={selectedContact} />
+          ) : (
+            <Box p={4}>Select a contact to start chatting</Box>
+          )}
+        </Box>
+      </Flex>
+    </Flex>
   );
 };
 
